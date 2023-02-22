@@ -1,0 +1,26 @@
+version: "3"
+services:
+  tusd:
+    image: tusproject/tusd:latest
+    command: -verbose -s3-bucket mybucket -s3-endpoint http://minio:9000
+    volumes:
+      - tusd:/data
+    environment:
+      - AWS_REGION: ${AWS_REGION}
+      - AWS_ACCESS_KEY_ID_FILE: ${MINIO_USERNAME}
+      - AWS_SECRET_ACCESS_KEY_FILE: ${MINIO_PASSWORD}
+
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio:/data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_USERNAME}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
+
+volumes:
+  tusd:
+  minio:
